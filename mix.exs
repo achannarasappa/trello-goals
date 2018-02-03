@@ -3,7 +3,7 @@ defmodule TrelloDailyGoals.MixProject do
 
   def project do
     [
-      app: :trello_daily_goals,
+      app: :app,
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
