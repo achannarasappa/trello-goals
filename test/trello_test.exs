@@ -11,9 +11,9 @@ defmodule TrelloTest do
     assert Trello.getCards(
              config[:trello_api_key],
              config[:trello_oauth_token],
-             config[:trello_board_ids]
+             config[:trello_board_id]
            )
            |> hd
-           |> Map.keys == expected
+           |> Map.keys() == expected
   end
 end

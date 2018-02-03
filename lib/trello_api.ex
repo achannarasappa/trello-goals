@@ -7,6 +7,8 @@ defmodule DailyGoals.TrelloApi do
   end
 
   def process_response_body(body) do
+    IO.inspect(body)
+
     Poison.decode!(body)
   end
 end
