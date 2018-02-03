@@ -2,9 +2,8 @@ defmodule TrelloTest do
   use ExUnit.Case
   alias DailyGoals.Trello, as: Trello
 
-  @tag :only
   @tag :io
-  test "gets cards" do
+  test "gets cards response properties" do
     config = Application.get_all_env(:app)
     expected = ["checklists", "closed", "due", "dueComplete", "id", "idList", "name"]
 
