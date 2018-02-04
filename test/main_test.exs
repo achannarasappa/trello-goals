@@ -31,11 +31,17 @@ defmodule MainTest do
   }
   @trello_card_prefix "Daily Goals - "
 
-  test "filter_daily_goals" do
-    assert Main.filter_daily_goals(
-             [@card_other, @card_old_daily_goal, @card_current_daily_goal],
+  @tag :only
+  test "is_card_daily_goals" do
+    assert Main.is_card_daily_goals(
+             @card_current_daily_goal,
              @trello_card_prefix
-           ) == [@card_old_daily_goal, @card_current_daily_goal]
+           ) == true
+
+    assert Main.is_card_daily_goals(
+             @card_other,
+             @trello_card_prefix
+           ) == false
   end
 
   @tag :only

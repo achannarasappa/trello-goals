@@ -6,9 +6,8 @@ defmodule DailyGoals.Main do
   @doc """
   Filter cards to only daily goal cards
   """
-  def filter_daily_goals(cards, trello_card_prefix) do
-    cards
-    |> Enum.filter(&String.starts_with?(Map.get(&1, :name), trello_card_prefix))
+  def is_card_daily_goals(card, trello_card_prefix) do
+    String.starts_with?(Map.get(card, :name), trello_card_prefix)
   end
 
   @doc """
