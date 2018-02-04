@@ -29,17 +29,35 @@ defmodule MainTest do
     dueComplete: false,
     checklists: []
   }
+  @trello_card_prefix "Daily Goals - "
+
+  test "filter_daily_goals" do
+    trello_card_prefix = Application.get_env(:app, :trello_card_prefix)
+
+    assert Main.filter_daily_goals(
+             [@card_other, @card_old_daily_goal, @card_current_daily_goal],
+             trello_card_prefix
+           ) == [@card_old_daily_goal, @card_current_daily_goal]
+  end
 
   @tag :only
-  test "filtering daily goals" do
-  
-    trello_card_prefix = config = Application.get_env(:app, :trello_card_prefix)
-    input = [ @card_other, @card_old_daily_goal, @card_current_daily_goal ]
-    output = [ @card_old_daily_goal, @card_current_daily_goal ]
-
-    assert Main.filter_daily_goals(input, trello_card_prefix) == output
-  
+  test "is_card_for_today true" do
+    assert Main.is_card_for_today(
+             @card_current_daily_goal,
+             @trello_card_prefix,
+             Timex.to_date({2018, 1, 30})
+           ) == true
   end
-  
 
+  @tag :only
+  test "is_card_for_today false" do
+    assert Main.is_card_for_today(
+             @card_old_daily_goal,
+             @trello_card_prefix,
+             Timex.to_date({2018, 1, 30})
+           ) == false
+
+    assert Main.is_card_for_today(@card_old_daily_goal, @trello_card_prefix, "invalid date") ==
+             false
+  end
 end
