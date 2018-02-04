@@ -27,4 +27,19 @@ defmodule DailyGoals.Main do
         false
     end
   end
+
+  @doc """
+  Run daily goals
+  """
+  def main() do
+    # config = Application.get_all_env(:app)
+
+    # cards =
+    #   Trello.getCards(
+    #     config[:trello_api_key],
+    #     config[:trello_oauth_token],
+    #     config[:trello_board_id]
+    #   )
+    #   |> filter_daily_goals
+  end
 end

@@ -32,11 +32,9 @@ defmodule MainTest do
   @trello_card_prefix "Daily Goals - "
 
   test "filter_daily_goals" do
-    trello_card_prefix = Application.get_env(:app, :trello_card_prefix)
-
     assert Main.filter_daily_goals(
              [@card_other, @card_old_daily_goal, @card_current_daily_goal],
-             trello_card_prefix
+             @trello_card_prefix
            ) == [@card_old_daily_goal, @card_current_daily_goal]
   end
 
