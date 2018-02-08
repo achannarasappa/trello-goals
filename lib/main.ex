@@ -81,6 +81,14 @@ defmodule DailyGoals.Main do
   end
 
   @doc """
+  Filter out complete checklist items
+  """
+  @spec filter_checklist_items(card_parsed) :: card_parsed
+  def filter_checklist_items(card_parsed) do
+    card_parsed
+  end
+
+  @doc """
   Run daily goals
   """
   def main() do

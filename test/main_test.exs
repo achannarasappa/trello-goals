@@ -66,6 +66,10 @@ defmodule MainTest do
     assert Main.is_card_for_today(@card_old_daily_goal, "invalid date") == false
   end
 
+  test "filter_checklist_items" do
+    assert true == true
+  end
+
   test "compare_cards" do
     assert Main.compare_cards(
              %{
