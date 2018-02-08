@@ -8,15 +8,17 @@ defmodule DailyGoals.Main do
           name: String.t(),
           idList: String.t(),
           checklists: [],
-          closed: boolean,
+          closed: boolean(),
           due: String.t(),
           dueComplete: String.t()
         }
 
+  @type card_parsed :: %{card: card, date: Date.t() | nil}
+
   @doc """
   Get card date
   """
-  @spec get_card_date(card, String.t()) :: %{card: card, date: Date.t() | nil}
+  @spec get_card_date(card, String.t()) :: card_parsed
   def get_card_date(card, trello_card_prefix) do
     date =
       card
@@ -40,18 +42,10 @@ defmodule DailyGoals.Main do
   @doc """
   Check if there is a card for today
   """
-  def is_card_for_today(card, trello_card_prefix, todays_date \\ Timex.now()) do
-    card
-    |> Map.get(:name)
-    |> String.replace_prefix(trello_card_prefix, "")
-    |> Timex.parse("{Mfull} {D}, {YYYY}")
-    |> case do
-      {:ok, date} ->
-        date |> Timex.to_date() == todays_date
-
-      _ ->
-        false
-    end
+  @spec is_card_for_today(card_parsed, Date.t()) :: boolean()
+  def is_card_for_today(card_parsed, todays_date \\ Date.utc_today()) do
+    card_parsed
+    |> Map.get(:date) == todays_date
   end
 
   @doc """
