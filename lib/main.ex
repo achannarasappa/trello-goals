@@ -86,6 +86,21 @@ defmodule DailyGoals.Main do
   @spec filter_checklist_items(card_parsed) :: card_parsed
   def filter_checklist_items(card_parsed) do
     card_parsed
+    |> Map.get(:checklists, [])
+    |> Enum.map(fn checklist ->
+      checklist
+      |> Map.get(:checkItems, [])
+      |> Enum.filter(&(&1 |> Map.get(:state) == "incomplete"))
+      |> case do
+        [] -> nil
+        checkItems -> checklist |> Map.put(:checkItems, checkItems)
+      end
+    end)
+    |> Enum.reject(&is_nil(&1))
+    |> case do
+      [] -> card_parsed |> Map.put(:checklists, [])
+      checklists -> card_parsed |> Map.put(:checklists, checklists)
+    end
   end
 
   @doc """
