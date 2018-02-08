@@ -83,7 +83,7 @@ defmodule DailyGoals.Main do
   @doc """
   Filter out complete checklist items
   """
-  @spec filter_checklist_items(card_parsed) :: card_parsed
+  @spec filter_checklist_items(card_parsed) :: card_parsed | nil
   def filter_checklist_items(card_parsed) do
     card_parsed
     |> Map.get(:checklists, [])
