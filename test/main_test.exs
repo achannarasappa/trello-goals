@@ -24,6 +24,10 @@ defmodule MainTest do
     dueComplete: false,
     checklists: []
   }
+  @card_parsed_old_daily_goal %{
+    card: @card_old_daily_goal,
+    date: ~D[2018-01-29]
+  }
   @card_current_daily_goal %{
     id: "5a6e037b5588952e9ec06eb4",
     name: "Daily Goals - January 30, 2018",
@@ -60,5 +64,67 @@ defmodule MainTest do
            ) == false
 
     assert Main.is_card_for_today(@card_old_daily_goal, "invalid date") == false
+  end
+
+  test "compare_cards" do
+    assert Main.compare_cards(
+             %{
+               card: "next",
+               date: ~D[2018-01-29]
+             },
+             %{
+               card: "prev",
+               date: ~D[2018-01-30]
+             }
+           ) ==
+             %{
+               card: "prev",
+               date: ~D[2018-01-30]
+             }
+
+    assert Main.compare_cards(
+             %{
+               card: "next",
+               date: ~D[2018-01-30]
+             },
+             %{
+               card: "prev",
+               date: ~D[2018-01-29]
+             }
+           ) ==
+             %{
+               card: "next",
+               date: ~D[2018-01-30]
+             }
+
+    assert Main.compare_cards(
+             %{
+               card: "next",
+               date: ~D[2018-01-30]
+             },
+             %{
+               card: "prev",
+               date: ~D[2018-01-30]
+             }
+           ) ==
+             %{
+               card: "prev",
+               date: ~D[2018-01-30]
+             }
+
+    assert Main.compare_cards(
+             %{
+               card: "next",
+               date: nil
+             },
+             %{
+               card: "prev",
+               date: ~D[2018-01-30]
+             }
+           ) ==
+             %{
+               card: "prev",
+               date: ~D[2018-01-30]
+             }
   end
 end

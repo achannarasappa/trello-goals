@@ -49,6 +49,20 @@ defmodule DailyGoals.Main do
   end
 
   @doc """
+  Compare two parsed cards and return the one with the most recent date
+  """
+  @spec compare_cards(card_parsed, card_parsed) :: card_parsed
+  def compare_cards(%{date: date_next} = card_next, %{date: date_prev} = card_prev) do
+    Timex.compare(date_prev, date_next)
+    |> case do
+      -1 -> card_next
+      0 -> card_prev
+      1 -> card_prev
+      _ -> card_prev
+    end
+  end
+
+  @doc """
   Run daily goals
   """
   def main() do
