@@ -119,9 +119,7 @@ defmodule MainTest do
                  ]
                }
              ]
-           }) == %{
-             checklists: []
-           }
+           }) == nil
   end
 
   test "filter_checklist_items empty" do
@@ -132,9 +130,7 @@ defmodule MainTest do
                  checkItems: []
                }
              ]
-           }) == %{
-             checklists: []
-           }
+           }) == nil
   end
 
   test "compare_cards" do

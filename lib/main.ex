@@ -98,7 +98,7 @@ defmodule DailyGoals.Main do
     end)
     |> Enum.reject(&is_nil(&1))
     |> case do
-      [] -> card_parsed |> Map.put(:checklists, [])
+      [] -> nil
       checklists -> card_parsed |> Map.put(:checklists, checklists)
     end
   end
