@@ -3,6 +3,27 @@ defmodule DailyGoals.Main do
   Main module for DailyGoals
   """
 
+  @type card :: %{
+          id: String.t(),
+          name: String.t(),
+          idList: String.t(),
+          checklists: [],
+          closed: boolean,
+          due: String.t(),
+          dueComplete: String.t()
+        }
+
+  @doc """
+  Get card date
+  """
+  @spec get_card_date(card, String.t()) :: %{card: card, date: Date.t()}
+  def get_card_date(card, _trello_card_prefix) do
+    %{
+      card: card,
+      date: Timex.now() |> Timex.to_date()
+    }
+  end
+
   @doc """
   Check if card is a daily goal card 
   """

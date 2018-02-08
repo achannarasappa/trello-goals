@@ -21,7 +21,8 @@ defmodule TrelloDailyGoals.MixProject do
     [
       {:httpoison, "~> 1.0"},
       {:poison, "~> 3.1"},
-      {:timex, "~> 3.1"}
+      {:timex, "~> 3.1"},
+      {:dialyxir, "~> 0.4", only: [:dev]}
     ]
   end
 end

@@ -32,6 +32,19 @@ defmodule MainTest do
   @trello_card_prefix "Daily Goals - "
 
   @tag :only
+  test "get_card_date" do
+    assert Main.get_card_date(@card_old_daily_goal, @trello_card_prefix) == %{
+             card: @card_old_daily_goal,
+             date: ~D[2018-01-29]
+           }
+
+    assert Main.get_card_date(@card_current_daily_goal, @trello_card_prefix) == %{
+             card: @card_current_daily_goal,
+             date: ~D[2018-01-30]
+           }
+  end
+
+  @tag :only
   test "is_card_daily_goals" do
     assert Main.is_card_daily_goals(
              @card_current_daily_goal,
