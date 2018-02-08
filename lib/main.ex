@@ -16,11 +16,24 @@ defmodule DailyGoals.Main do
   @doc """
   Get card date
   """
-  @spec get_card_date(card, String.t()) :: %{card: card, date: Date.t()}
-  def get_card_date(card, _trello_card_prefix) do
+  @spec get_card_date(card, String.t()) :: %{card: card, date: Date.t() | nil}
+  def get_card_date(card, trello_card_prefix) do
+    date =
+      card
+      |> Map.get(:name)
+      |> String.replace_prefix(trello_card_prefix, "")
+      |> Timex.parse("{Mfull} {D}, {YYYY}")
+      |> case do
+        {:ok, date} ->
+          date |> Timex.to_date()
+
+        _ ->
+          nil
+      end
+
     %{
       card: card,
-      date: Timex.now() |> Timex.to_date()
+      date: date
     }
   end
 
