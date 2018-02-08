@@ -31,7 +31,6 @@ defmodule MainTest do
   }
   @trello_card_prefix "Daily Goals - "
 
-  @tag :only
   test "get_card_date" do
     assert Main.get_card_date(@card_old_daily_goal, @trello_card_prefix) == %{
              card: @card_old_daily_goal,
@@ -49,20 +48,6 @@ defmodule MainTest do
            }
   end
 
-  @tag :only
-  test "is_card_daily_goals" do
-    assert Main.is_card_daily_goals(
-             @card_current_daily_goal,
-             @trello_card_prefix
-           ) == true
-
-    assert Main.is_card_daily_goals(
-             @card_other,
-             @trello_card_prefix
-           ) == false
-  end
-
-  @tag :only
   test "is_card_for_today true" do
     assert Main.is_card_for_today(
              @card_current_daily_goal,
@@ -71,7 +56,6 @@ defmodule MainTest do
            ) == true
   end
 
-  @tag :only
   test "is_card_for_today false" do
     assert Main.is_card_for_today(
              @card_old_daily_goal,

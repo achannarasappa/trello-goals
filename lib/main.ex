@@ -38,13 +38,6 @@ defmodule DailyGoals.Main do
   end
 
   @doc """
-  Check if card is a daily goal card 
-  """
-  def is_card_daily_goals(card, trello_card_prefix) do
-    String.starts_with?(Map.get(card, :name), trello_card_prefix)
-  end
-
-  @doc """
   Check if there is a card for today
   """
   def is_card_for_today(card, trello_card_prefix, todays_date \\ Timex.now()) do
