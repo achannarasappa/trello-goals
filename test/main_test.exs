@@ -18,7 +18,7 @@ defmodule MainTest do
   }
   @card_current_daily_goal %{
     name: "Daily Goals - January 30, 2018",
-    checklists: []
+    checklists: [@checklist]
   }
   @card_parsed_current_daily_goal %{
     card: @card_current_daily_goal,
@@ -49,8 +49,92 @@ defmodule MainTest do
     assert Main.is_card_for_today(@card_old_daily_goal, "invalid date") == false
   end
 
-  test "filter_checklist_items" do
-    assert true == true
+  test "filter_checklist_items mixed" do
+    assert Main.filter_checklist_items(%{
+             checklists: [
+               %{
+                 name: "mixed",
+                 checkItems: [
+                   %{
+                     state: "complete"
+                   },
+                   %{
+                     state: "incomplete"
+                   },
+                   %{
+                     state: "other"
+                   }
+                 ]
+               }
+             ]
+           }) == %{
+             checklists: [
+               %{
+                 name: "mixed",
+                 checkItems: [
+                   %{
+                     state: "incomplete"
+                   }
+                 ]
+               }
+             ]
+           }
+  end
+
+  test "filter_checklist_items incomplete" do
+    assert Main.filter_checklist_items(%{
+             checklists: [
+               %{
+                 name: "incomplete",
+                 checkItems: [
+                   %{
+                     state: "incomplete"
+                   }
+                 ]
+               }
+             ]
+           }) == %{
+             checklists: [
+               %{
+                 name: "incomplete",
+                 checkItems: [
+                   %{
+                     state: "incomplete"
+                   }
+                 ]
+               }
+             ]
+           }
+  end
+
+  test "filter_checklist_items complete" do
+    assert Main.filter_checklist_items(%{
+             checklists: [
+               %{
+                 name: "complete",
+                 checkItems: [
+                   %{
+                     state: "complete"
+                   }
+                 ]
+               }
+             ]
+           }) == %{
+             checklists: []
+           }
+  end
+
+  test "filter_checklist_items empty" do
+    assert Main.filter_checklist_items(%{
+             checklists: [
+               %{
+                 name: "empty",
+                 checkItems: []
+               }
+             ]
+           }) == %{
+             checklists: []
+           }
   end
 
   test "compare_cards" do
