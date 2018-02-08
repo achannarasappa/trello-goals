@@ -7,10 +7,24 @@ defmodule DailyGoals.Main do
           id: String.t(),
           name: String.t(),
           idList: String.t(),
-          checklists: [],
+          checklists: [checklist],
           closed: boolean(),
           due: String.t(),
           dueComplete: String.t()
+        }
+
+  @type checklist :: %{
+          id: String.t(),
+          name: String.t(),
+          idBoard: String.t(),
+          idCard: String.t(),
+          checkItems: [checklist_item]
+        }
+
+  @type checklist_item :: %{
+          id: String.t(),
+          name: String.t(),
+          state: String.t()
         }
 
   @type card_parsed :: %{card: card, date: Date.t() | nil}
