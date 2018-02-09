@@ -12,13 +12,8 @@ defmodule MainTest do
   @card_old_daily_goal %{
     name: "Daily Goals - January 29, 2018"
   }
-  @card_parsed_old_daily_goal %{
-    card: @card_old_daily_goal,
-    date: ~D[2018-01-29]
-  }
   @card_current_daily_goal %{
-    name: "Daily Goals - January 30, 2018",
-    checklists: [@checklist]
+    name: "Daily Goals - January 30, 2018"
   }
   @card_parsed_current_daily_goal %{
     card: @card_current_daily_goal,
