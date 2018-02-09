@@ -68,20 +68,53 @@ defmodule TrelloTest do
       "url"
     ]
 
-    expected_name = "test trello card"
+    expected_card_name = "test trello card"
+    expected_checklist_name = "test trello checklist"
 
     response =
       Trello.create_card(
         config[:trello_api_key],
         config[:trello_oauth_token],
         %{
-          name: expected_name
+          name: expected_card_name,
+          checklists: [
+            %{
+              name: expected_checklist_name,
+              checkItems: [
+                %{
+                  name: "to do 1",
+                  checked: false
+                }
+              ]
+            },
+            %{
+              name: "test trello checklist 2",
+              checkItems: [
+                %{
+                  name: "to do 2",
+                  checked: true
+                }
+              ]
+            }
+          ]
         },
         @trello_list_id
       )
       |> IO.inspect()
 
-    assert response |> Map.keys() == expected_properties
-    assert response |> Map.get("name") == expected_name
+    assert response
+           |> Map.keys() == expected_properties
+
+    assert response
+           |> Map.get("name") == expected_card_name
+
+    assert response
+           |> Map.get("checklists")
+           |> hd
+           |> Map.get("name") == expected_checklist_name
+
+    assert response
+           |> Map.get("checklists")
+           |> length == 2
   end
 end

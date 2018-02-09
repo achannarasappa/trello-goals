@@ -26,10 +26,9 @@ defmodule DailyGoals.Trello do
   @doc """
   Create trello card
   """
+  # TODO: break this monster up
   def create_card(api_key, oath_token, card, list_id) do
-    Logger.debug("Creating card on list #{list_id}")
-
-    payload =
+    card_payload =
       card
       |> Map.merge(%{
         key: api_key,
@@ -39,8 +38,71 @@ defmodule DailyGoals.Trello do
 
     TrelloApi.start()
 
-    card =
-      TrelloApi.post!("/cards", payload)
+    card_response =
+      TrelloApi.post!("/cards", card_payload)
       |> Map.get(:body)
+
+    IO.inspect(card_response)
+
+    card_id =
+      card_response
+      |> Map.get("id")
+
+    Logger.debug("Created card #{card_id} on list #{list_id}")
+
+    checklist_responses =
+      card
+      |> Map.get(:checklists)
+      |> Enum.map(fn checklist ->
+        checklist_payload =
+          checklist
+          |> Map.take([:name, :pos])
+          |> Map.merge(%{
+            key: api_key,
+            token: oath_token,
+            idCard: card_id
+          })
+
+        checklist_response =
+          TrelloApi.post!("/checklists", checklist_payload)
+          |> Map.get(:body)
+
+        checklist_id =
+          checklist_response
+          |> Map.get("id")
+
+        Logger.debug("Created checklist #{checklist_id} on card #{card_id}")
+
+        check_item_responses =
+          checklist
+          |> Map.get(:checkItems)
+          |> Enum.map(fn check_item ->
+            check_item_payload =
+              check_item
+              |> Map.take([:name, :pos, :checked])
+              |> Map.merge(%{
+                key: api_key,
+                token: oath_token
+              })
+
+            check_item_response =
+              TrelloApi.post!("/checklists/#{checklist_id}/checkItems", checklist_payload)
+              |> Map.get(:body)
+
+            check_item_id =
+              check_item_response
+              |> Map.get("id")
+
+            Logger.debug("Created checklist_item #{check_item_id} on checklist #{checklist_id}")
+
+            check_item_response
+          end)
+
+        checklist_response
+        |> Map.put(:checkItems, check_item_responses)
+      end)
+
+    card_response
+    |> Map.put(:checklists, checklist_responses)
   end
 end
