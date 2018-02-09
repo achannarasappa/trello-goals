@@ -80,9 +80,9 @@ defmodule DailyGoals.Main do
   @doc """
   Filter out complete checklist items
   """
-  @spec filter_checklist_items(card_parsed) :: card_parsed | nil
-  def filter_checklist_items(card_parsed) do
-    card_parsed
+  @spec filter_checklist_items(card) :: card | nil
+  def filter_checklist_items(card) do
+    card
     |> Map.get(:checklists, [])
     |> Enum.map(fn checklist ->
       checklist
@@ -96,7 +96,7 @@ defmodule DailyGoals.Main do
     |> Enum.reject(&is_nil(&1))
     |> case do
       [] -> nil
-      checklists -> card_parsed |> Map.put(:checklists, checklists)
+      checklists -> card |> Map.put(:checklists, checklists)
     end
   end
 
