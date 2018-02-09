@@ -15,7 +15,7 @@ defmodule DailyGoals.Trello do
       token: oath_token
     ]
 
-    Logger.debug("Requesting cards for #{board_id}")
+    Logger.debug("Requesting cards for board #{board_id}")
 
     TrelloApi.start()
 
@@ -26,6 +26,21 @@ defmodule DailyGoals.Trello do
   @doc """
   Create trello card
   """
-  def create_card(api_key, oath_token, list_id) do
+  def create_card(api_key, oath_token, card, list_id) do
+    Logger.debug("Creating card on list #{list_id}")
+
+    payload =
+      card
+      |> Map.merge(%{
+        key: api_key,
+        token: oath_token,
+        idList: list_id
+      })
+
+    TrelloApi.start()
+
+    card =
+      TrelloApi.post!("/cards", payload)
+      |> Map.get(:body)
   end
 end

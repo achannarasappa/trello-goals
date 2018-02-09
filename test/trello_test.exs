@@ -22,7 +22,7 @@ defmodule TrelloTest do
     end
   end
 
-  @tag :io
+  @tag :io_read
   test "get_cards", config do
     expected = ["checklists", "closed", "due", "dueComplete", "id", "idList", "name"]
 
@@ -35,9 +35,9 @@ defmodule TrelloTest do
            |> Map.keys() == expected
   end
 
-  @tag :io
+  @tag :io_write
   test "create_card", config do
-    expected = [
+    expected_properties = [
       "badges",
       "checkItemStates",
       "closed",
@@ -68,11 +68,20 @@ defmodule TrelloTest do
       "url"
     ]
 
-    assert Trello.create_card(
-             config[:trello_api_key],
-             config[:trello_oauth_token],
-             @trello_list_id
-           )
-           |> Map.keys() == expected
+    expected_name = "test trello card"
+
+    response =
+      Trello.create_card(
+        config[:trello_api_key],
+        config[:trello_oauth_token],
+        %{
+          name: expected_name
+        },
+        @trello_list_id
+      )
+      |> IO.inspect()
+
+    assert response |> Map.keys() == expected_properties
+    assert response |> Map.get("name") == expected_name
   end
 end

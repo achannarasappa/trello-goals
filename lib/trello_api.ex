@@ -9,4 +9,12 @@ defmodule DailyGoals.TrelloApi do
   def process_response_body(body) do
     Poison.decode!(body)
   end
+
+  def process_request_headers(headers) do
+    Enum.into(headers, [{"Content-Type", "application/json"}])
+  end
+
+  def process_request_body(body) do
+    Poison.encode!(body)
+  end
 end
