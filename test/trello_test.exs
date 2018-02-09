@@ -7,7 +7,7 @@ defmodule TrelloTest do
     config = Application.get_all_env(:app)
     expected = ["checklists", "closed", "due", "dueComplete", "id", "idList", "name"]
 
-    assert Trello.getCards(
+    assert Trello.get_cards(
              config[:trello_api_key],
              config[:trello_oauth_token],
              config[:trello_board_id]

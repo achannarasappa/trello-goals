@@ -6,7 +6,7 @@ defmodule DailyGoals.Trello do
   @doc """
   Get cards from trello
   """
-  def getCards(api_key, oath_token, board_id) do
+  def get_cards(api_key, oath_token, board_id) do
     query_string = [
       checklists: "all",
       checklist_fields: "name",
