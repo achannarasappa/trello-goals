@@ -3,7 +3,7 @@ defmodule TrelloTest do
   alias DailyGoals.Trello, as: Trello
 
   @tag :io
-  test "gets cards response properties" do
+  test "get_cards" do
     config = Application.get_all_env(:app)
     expected = ["checklists", "closed", "due", "dueComplete", "id", "idList", "name"]
 
@@ -14,5 +14,9 @@ defmodule TrelloTest do
            )
            |> hd
            |> Map.keys() == expected
+  end
+
+  @tag :io
+  test "create_card" do
   end
 end
