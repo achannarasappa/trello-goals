@@ -7,6 +7,7 @@ defmodule TrelloTest do
     :trello_oauth_token,
     :trello_board_id
   ]
+  @trello_list_id "5890a23bc9d14f6ca9c4c2cd"
 
   setup_all do
     config = Application.get_all_env(:app)
@@ -35,7 +36,43 @@ defmodule TrelloTest do
   end
 
   @tag :io
-  test "create_card" do
-    assert true == true
+  test "create_card", config do
+    expected = [
+      "badges",
+      "checkItemStates",
+      "closed",
+      "dateLastActivity",
+      "desc",
+      "descData",
+      "due",
+      "dueComplete",
+      "email",
+      "id",
+      "idAttachmentCover",
+      "idBoard",
+      "idChecklists",
+      "idLabels",
+      "idList",
+      "idMembers",
+      "idMembersVoted",
+      "idShort",
+      "labels",
+      "limits",
+      "manualCoverAttachment",
+      "name",
+      "pos",
+      "shortLink",
+      "shortUrl",
+      "stickers",
+      "subscribed",
+      "url"
+    ]
+
+    assert Trello.create_card(
+             config[:trello_api_key],
+             config[:trello_oauth_token],
+             @trello_list_id
+           )
+           |> Map.keys() == expected
   end
 end
