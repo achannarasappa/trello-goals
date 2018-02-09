@@ -4,7 +4,7 @@ defmodule DailyGoals.Trello do
   import Logger
 
   @doc """
-  Get cards from trello
+  Get trello cards
   """
   def get_cards(api_key, oath_token, board_id) do
     query_string = [
@@ -21,5 +21,11 @@ defmodule DailyGoals.Trello do
 
     TrelloApi.get!("/boards/#{board_id}/cards/open?" <> buildQueryString(query_string))
     |> Map.get(:body)
+  end
+
+  @doc """
+  Create trello card
+  """
+  def create_card(api_key, oath_token, list_id) do
   end
 end
