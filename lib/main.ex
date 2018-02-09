@@ -4,17 +4,15 @@ defmodule DailyGoals.Main do
   """
 
   @type card :: %{
-          id: String.t(),
           name: String.t(),
           idList: String.t(),
           checklists: [checklist],
           closed: boolean(),
           due: String.t(),
-          dueComplete: String.t()
+          dueComplete: boolean()
         }
 
   @type checklist :: %{
-          id: String.t(),
           name: String.t(),
           idBoard: String.t(),
           idCard: String.t(),
@@ -22,7 +20,6 @@ defmodule DailyGoals.Main do
         }
 
   @type checklist_item :: %{
-          id: String.t(),
           name: String.t(),
           state: String.t()
         }
@@ -101,6 +98,30 @@ defmodule DailyGoals.Main do
       [] -> nil
       checklists -> card_parsed |> Map.put(:checklists, checklists)
     end
+  end
+
+  @doc """
+  Create new daily goals card based on previous checklists
+  """
+  @spec create_new_card(card | nil, String.t(), String.t(), Date.t()) :: card
+  def create_new_card(card, trello_card_prefix, trello_id_list, todays_date \\ Date.utc_today()) do
+    checklists =
+      card
+      |> case do
+        nil -> []
+        _ -> card |> Map.get(:checklists)
+      end
+
+    date_string = Timex.format!(todays_date, "{Mfull} {D}, {YYYY}")
+
+    %{
+      name: "#{trello_card_prefix}#{date_string}",
+      idList: trello_id_list,
+      checklists: checklists,
+      closed: false,
+      due: Timex.format!(todays_date, "{ISOdate}"),
+      dueComplete: false
+    }
   end
 
   @doc """
