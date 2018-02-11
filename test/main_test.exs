@@ -202,28 +202,35 @@ defmodule MainTest do
              @trello_card_prefix,
              "12345",
              ~D[2018-01-31]
-           ) == %{
-             name: "Daily Goals - January 31, 2018",
-             idList: "12345",
-             checklists: [
-               %{
-                 name: "test"
-               }
-             ],
-             closed: false,
-             due: "2018-01-31",
-             dueComplete: false
+           ) == {
+             :create,
+             %{
+               name: "Daily Goals - January 31, 2018",
+               idList: "12345",
+               checklists: [
+                 %{
+                   name: "test"
+                 }
+               ],
+               closed: false,
+               due: "2018-01-31",
+               dueComplete: false
+             }
            }
   end
 
   test "create_new_card nil" do
-    assert Main.create_new_card(nil, @trello_card_prefix, "12345", ~D[2018-01-31]) == %{
-             name: "Daily Goals - January 31, 2018",
-             idList: "12345",
-             checklists: [],
-             closed: false,
-             due: "2018-01-31",
-             dueComplete: false
-           }
+    assert Main.create_new_card(nil, @trello_card_prefix, "12345", ~D[2018-01-31]) ==
+             {
+               :empty,
+               %{
+                 name: "Daily Goals - January 31, 2018",
+                 idList: "12345",
+                 checklists: [],
+                 closed: false,
+                 due: "2018-01-31",
+                 dueComplete: false
+               }
+             }
   end
 end

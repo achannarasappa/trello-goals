@@ -1,4 +1,6 @@
 defmodule DailyGoals.Main do
+  alias DailyGoals.Trello, as: Trello
+
   @moduledoc """
   Main module for DailyGoals
   """
@@ -103,24 +105,33 @@ defmodule DailyGoals.Main do
   @doc """
   Create new daily goals card based on previous checklists
   """
-  @spec create_new_card(card | nil, String.t(), String.t(), Date.t()) :: card
+  @spec create_new_card(card | nil, String.t(), String.t(), Date.t()) :: {atom(), card}
   def create_new_card(card, trello_card_prefix, trello_id_list, todays_date \\ Date.utc_today()) do
-    checklists =
+    {action, checklists} =
       card
       |> case do
-        nil -> []
-        _ -> card |> Map.get(:checklists)
+        nil ->
+          {:empty, []}
+
+        _ ->
+          card
+          |> Map.get(:checklists)
+          |> (&{:create, &1}).()
+          |> IO.inspect()
       end
 
     date_string = Timex.format!(todays_date, "{Mfull} {D}, {YYYY}")
 
-    %{
-      name: "#{trello_card_prefix}#{date_string}",
-      idList: trello_id_list,
-      checklists: checklists,
-      closed: false,
-      due: Timex.format!(todays_date, "{ISOdate}"),
-      dueComplete: false
+    {
+      action,
+      %{
+        name: "#{trello_card_prefix}#{date_string}",
+        idList: trello_id_list,
+        checklists: checklists,
+        closed: false,
+        due: Timex.format!(todays_date, "{ISOdate}"),
+        dueComplete: false
+      }
     }
   end
 
