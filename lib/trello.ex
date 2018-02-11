@@ -24,31 +24,21 @@ defmodule DailyGoals.Trello do
   end
 
   defp create_check_item(api_key, oath_token, check_item, checklist_id) do
-    query_string =
-      buildQueryString(%{
-        "key" => api_key,
-        "token" => oath_token
-      })
-
-    check_item_payload =
+    response =
       check_item
       |> Map.take(["name", "pos", "checked"])
       |> Map.merge(%{
         "key" => api_key,
         "token" => oath_token
       })
-
-    check_item_response =
-      TrelloApi.post!("/checklists/#{checklist_id}/checkItems", check_item_payload)
+      |> (&TrelloApi.post!("/checklists/#{checklist_id}/checkItems", &1)).()
       |> Map.get(:body)
 
-    check_item_id =
-      check_item_response
-      |> Map.get("id")
+    id = response |> Map.get("id")
 
-    Logger.debug("Created checklist_item #{check_item_id} on checklist #{checklist_id}")
+    Logger.debug("Created checklist_item #{id} on checklist #{checklist_id}")
 
-    check_item_response
+    response
   end
 
   @doc """
