@@ -15,7 +15,6 @@ defmodule TrelloTest do
     @required_env
     |> MapSet.new()
     |> MapSet.subset?(config |> Keyword.keys() |> MapSet.new())
-    |> IO.inspect()
     |> case do
       false -> raise "Environment variables for testing not set!"
       _ -> config
@@ -40,6 +39,7 @@ defmodule TrelloTest do
     expected_properties = [
       "badges",
       "checkItemStates",
+      "checklists",
       "closed",
       "dateLastActivity",
       "desc",
@@ -68,53 +68,69 @@ defmodule TrelloTest do
       "url"
     ]
 
-    expected_card_name = "test trello card"
-    expected_checklist_name = "test trello checklist"
+    input_card = %{
+      "name" => "test trello card",
+      "checklists" => [
+        %{
+          "name" => "test trello checklist 1",
+          "checkItems" => [
+            %{
+              "name" => "to do 1",
+              "checked" => false
+            }
+          ]
+        },
+        %{
+          "name" => "test trello checklist 2",
+          "checkItems" => [
+            %{
+              "name" => "to do 2",
+              "checked" => true
+            }
+          ]
+        }
+      ]
+    }
 
     response =
       Trello.create_card(
         config[:trello_api_key],
         config[:trello_oauth_token],
-        %{
-          name: expected_card_name,
-          checklists: [
-            %{
-              name: expected_checklist_name,
-              checkItems: [
-                %{
-                  name: "to do 1",
-                  checked: false
-                }
-              ]
-            },
-            %{
-              name: "test trello checklist 2",
-              checkItems: [
-                %{
-                  name: "to do 2",
-                  checked: true
-                }
-              ]
-            }
-          ]
-        },
+        input_card,
         @trello_list_id
       )
-      |> IO.inspect()
 
     assert response
            |> Map.keys() == expected_properties
 
     assert response
-           |> Map.get("name") == expected_card_name
+           |> get_in([
+             Access.key!("name")
+           ]) == "test trello card"
 
     assert response
-           |> Map.get("checklists")
-           |> hd
-           |> Map.get("name") == expected_checklist_name
+           |> get_in([
+             Access.key!("checklists"),
+             Access.all(),
+             Access.key!("name")
+           ]) == ["test trello checklist 1", "test trello checklist 2"]
 
     assert response
-           |> Map.get("checklists")
-           |> length == 2
+           |> get_in([
+             Access.key!("checklists"),
+             Access.all(),
+             Access.key!("checkItems"),
+             Access.all(),
+             Access.key!("name")
+           ]) == [["to do 1"], ["to do 2"]]
+
+    assert response
+           |> get_in([
+             Access.key!("checklists"),
+             Access.all(),
+             Access.key!("checkItems"),
+             Access.all(),
+             Access.key!("state")
+           ]) == [["incomplete"], ["complete"]]
   end
 end
