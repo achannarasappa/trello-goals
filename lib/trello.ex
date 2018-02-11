@@ -25,6 +25,7 @@ defmodule DailyGoals.Trello do
 
   defp create_check_item(api_key, oath_token, check_item, checklist_id) do
     response =
+      %{"id" => id} =
       check_item
       |> Map.take(["name", "pos", "checked"])
       |> Map.merge(%{
@@ -33,8 +34,6 @@ defmodule DailyGoals.Trello do
       })
       |> (&TrelloApi.post!("/checklists/#{checklist_id}/checkItems", &1)).()
       |> Map.get(:body)
-
-    id = response |> Map.get("id")
 
     Logger.debug("Created checklist_item #{id} on checklist #{checklist_id}")
 
@@ -46,6 +45,7 @@ defmodule DailyGoals.Trello do
   """
   defp create_checklist(api_key, oath_token, checklist, card_id) do
     response =
+      %{"id" => id} =
       checklist
       |> Map.take(["name", "pos"])
       |> Map.merge(%{
@@ -55,8 +55,6 @@ defmodule DailyGoals.Trello do
       })
       |> (&TrelloApi.post!("/checklists", &1)).()
       |> Map.get(:body)
-
-    id = response |> Map.get("id")
 
     Logger.debug("Created checklist #{id} on card #{card_id}")
 
@@ -72,33 +70,27 @@ defmodule DailyGoals.Trello do
   @doc """
   Create trello card, checklists, and checklist items
   """
-  def create_card(api_key, oath_token, card, list_id) do
-    card_payload =
-      card
-      |> Map.merge(%{
-        key: api_key,
-        token: oath_token,
-        idList: list_id
-      })
-
+  def create_card(api_key, oath_token, %{"checklists" => checklists} = card, list_id) do
     TrelloApi.start()
 
-    card_response =
-      TrelloApi.post!("/cards", card_payload)
+    response =
+      %{"id" => id} =
+      card
+      |> Map.merge(%{
+        "key" => api_key,
+        "token" => oath_token,
+        "idCard" => card_id
+      })
+      |> (&TrelloApi.post!("/cards", &1)).()
       |> Map.get(:body)
 
-    card_id =
-      card_response
-      |> Map.get("id")
-
-    Logger.debug("Created card #{card_id} on list #{list_id}")
+    Logger.debug("Created card #{id} on list #{list_id}")
 
     checklist_responses =
-      card
-      |> Map.get("checklists")
-      |> Enum.map(&create_checklist(api_key, oath_token, &1, card_id))
+      checklists
+      |> Enum.map(&create_checklist(api_key, oath_token, &1, id))
 
-    card_response
+    response
     |> Map.put("checklists", checklist_responses)
   end
 end
