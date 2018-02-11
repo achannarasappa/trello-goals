@@ -45,7 +45,7 @@ defmodule DailyGoals.Trello do
   Create trello checklists and checklist items
   """
   defp create_checklist(api_key, oath_token, checklist, card_id) do
-    checklist_payload =
+    response =
       checklist
       |> Map.take(["name", "pos"])
       |> Map.merge(%{
@@ -53,23 +53,19 @@ defmodule DailyGoals.Trello do
         "token" => oath_token,
         "idCard" => card_id
       })
-
-    checklist_response =
-      TrelloApi.post!("/checklists", checklist_payload)
+      |> (&TrelloApi.post!("/checklists", &1)).()
       |> Map.get(:body)
 
-    checklist_id =
-      checklist_response
-      |> Map.get("id")
+    id = response |> Map.get("id")
 
-    Logger.debug("Created checklist #{checklist_id} on card #{card_id}")
+    Logger.debug("Created checklist #{id} on card #{card_id}")
 
     check_item_responses =
       checklist
       |> Map.get("checkItems")
-      |> Enum.map(&create_check_item(api_key, oath_token, &1, checklist_id))
+      |> Enum.map(&create_check_item(api_key, oath_token, &1, id))
 
-    checklist_response
+    response
     |> Map.put("checkItems", check_item_responses)
   end
 
