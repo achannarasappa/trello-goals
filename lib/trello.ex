@@ -23,6 +23,34 @@ defmodule DailyGoals.Trello do
     |> Map.get(:body)
   end
 
+  defp create_check_item(api_key, oath_token, check_item, checklist_id) do
+    query_string =
+      buildQueryString(%{
+        "key" => api_key,
+        "token" => oath_token
+      })
+
+    check_item_payload =
+      check_item
+      |> Map.take(["name", "pos", "checked"])
+      |> Map.merge(%{
+        "key" => api_key,
+        "token" => oath_token
+      })
+
+    check_item_response =
+      TrelloApi.post!("/checklists/#{checklist_id}/checkItems", check_item_payload)
+      |> Map.get(:body)
+
+    check_item_id =
+      check_item_response
+      |> Map.get("id")
+
+    Logger.debug("Created checklist_item #{check_item_id} on checklist #{checklist_id}")
+
+    check_item_response
+  end
+
   @doc """
   Create trello checklists and checklist items
   """
@@ -49,33 +77,7 @@ defmodule DailyGoals.Trello do
     check_item_responses =
       checklist
       |> Map.get("checkItems")
-      |> Enum.map(fn check_item ->
-        query_string =
-          buildQueryString(%{
-            "key" => api_key,
-            "token" => oath_token
-          })
-
-        check_item_payload =
-          check_item
-          |> Map.take(["name", "pos", "checked"])
-          |> Map.merge(%{
-            "key" => api_key,
-            "token" => oath_token
-          })
-
-        check_item_response =
-          TrelloApi.post!("/checklists/#{checklist_id}/checkItems", check_item_payload)
-          |> Map.get(:body)
-
-        check_item_id =
-          check_item_response
-          |> Map.get("id")
-
-        Logger.debug("Created checklist_item #{check_item_id} on checklist #{checklist_id}")
-
-        check_item_response
-      end)
+      |> Enum.map(&create_check_item(api_key, oath_token, &1, checklist_id))
 
     checklist_response
     |> Map.put("checkItems", check_item_responses)
