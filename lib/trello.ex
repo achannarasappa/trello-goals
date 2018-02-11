@@ -79,7 +79,7 @@ defmodule DailyGoals.Trello do
       |> Map.merge(%{
         "key" => api_key,
         "token" => oath_token,
-        "idCard" => card_id
+        "idList" => list_id
       })
       |> (&TrelloApi.post!("/cards", &1)).()
       |> Map.get(:body)
