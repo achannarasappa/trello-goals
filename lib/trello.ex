@@ -24,7 +24,7 @@ defmodule DailyGoals.Trello do
   end
 
   @doc """
-  Create trello card
+  Create trello card, checklists, and checklist items
   """
   # TODO: break this monster up
   def create_card(api_key, oath_token, card, list_id) do
@@ -42,8 +42,6 @@ defmodule DailyGoals.Trello do
       TrelloApi.post!("/cards", card_payload)
       |> Map.get(:body)
 
-    IO.inspect(card_response)
-
     card_id =
       card_response
       |> Map.get("id")
@@ -52,15 +50,15 @@ defmodule DailyGoals.Trello do
 
     checklist_responses =
       card
-      |> Map.get(:checklists)
+      |> Map.get("checklists")
       |> Enum.map(fn checklist ->
         checklist_payload =
           checklist
-          |> Map.take([:name, :pos])
+          |> Map.take(["name", "pos"])
           |> Map.merge(%{
-            key: api_key,
-            token: oath_token,
-            idCard: card_id
+            "key" => api_key,
+            "token" => oath_token,
+            "idCard" => card_id
           })
 
         checklist_response =
@@ -75,18 +73,24 @@ defmodule DailyGoals.Trello do
 
         check_item_responses =
           checklist
-          |> Map.get(:checkItems)
+          |> Map.get("checkItems")
           |> Enum.map(fn check_item ->
+            query_string =
+              buildQueryString(%{
+                "key" => api_key,
+                "token" => oath_token
+              })
+
             check_item_payload =
               check_item
-              |> Map.take([:name, :pos, :checked])
+              |> Map.take(["name", "pos", "checked"])
               |> Map.merge(%{
-                key: api_key,
-                token: oath_token
+                "key" => api_key,
+                "token" => oath_token
               })
 
             check_item_response =
-              TrelloApi.post!("/checklists/#{checklist_id}/checkItems", checklist_payload)
+              TrelloApi.post!("/checklists/#{checklist_id}/checkItems", check_item_payload)
               |> Map.get(:body)
 
             check_item_id =
@@ -99,10 +103,10 @@ defmodule DailyGoals.Trello do
           end)
 
         checklist_response
-        |> Map.put(:checkItems, check_item_responses)
+        |> Map.put("checkItems", check_item_responses)
       end)
 
     card_response
-    |> Map.put(:checklists, checklist_responses)
+    |> Map.put("checklists", checklist_responses)
   end
 end
