@@ -1,5 +1,6 @@
 defmodule DailyGoals.Main do
   alias DailyGoals.Trello, as: Trello
+  import Logger
 
   @moduledoc """
   Main module for DailyGoals
@@ -226,14 +227,34 @@ defmodule DailyGoals.Main do
   Run daily goals
   """
   def main() do
-    # config = Application.get_all_env(:app)
+    config = Application.get_all_env(:app)
 
-    # cards =
-    #   Trello.getCards(
-    #     config[:trello_api_key],
-    #     config[:trello_oauth_token],
-    #     config[:trello_board_id]
-    #   )
-    #   |> filter_daily_goals
+    list_id =
+      Trello.get_list(
+        config[:trello_api_key],
+        config[:trello_oauth_token],
+        config[:trello_board_id]
+      )
+      |> get_list_id(config[:trello_list_name])
+
+    Trello.get_cards(
+      config[:trello_api_key],
+      config[:trello_oauth_token],
+      config[:trello_board_id]
+    )
+    |> get_daily_goal_card(config[:trello_card_prefix], list_id)
+    |> case do
+      {:exists, _} ->
+        Logger.info("Card already exists for today!")
+        nil
+
+      {_, card} ->
+        Trello.create_card(
+          config[:trello_api_key],
+          config[:trello_oauth_token],
+          card,
+          list_id
+        )
+    end
   end
 end
