@@ -117,7 +117,6 @@ defmodule DailyGoals.Main do
           card
           |> Map.get(:checklists)
           |> (&{:create, &1}).()
-          |> IO.inspect()
       end
 
     date_string = Timex.format!(todays_date, "{Mfull} {D}, {YYYY}")
@@ -133,6 +132,61 @@ defmodule DailyGoals.Main do
         dueComplete: false
       }
     }
+  end
+
+  @doc """
+  Get the daily goal card to create
+  """
+  @spec get_daily_goal_card([card], String.t(), String.t(), Date.t()) :: {atom(), card}
+  def get_daily_goal_card(
+        cards,
+        trello_card_prefix,
+        trello_id_list,
+        todays_date \\ Date.utc_today()
+      )
+
+  def get_daily_goal_card(
+        cards,
+        trello_card_prefix,
+        trello_id_list,
+        todays_date
+      )
+      when length(cards) > 1 do
+    cards
+    |> Enum.map(&get_card_date(&1, trello_card_prefix))
+    |> Enum.reduce(&compare_cards(&1, &2))
+    |> List.wrap()
+    |> get_daily_goal_card(trello_card_prefix, trello_id_list, todays_date)
+  end
+
+  def get_daily_goal_card(
+        cards,
+        trello_card_prefix,
+        trello_id_list,
+        todays_date
+      )
+      when length(cards) == 1 do
+    cards
+    |> Enum.reject(&is_card_for_today(&1, todays_date))
+    |> case do
+      [card] ->
+        card
+        |> Map.get(:card)
+        |> filter_checklist_items
+        |> create_new_card(trello_card_prefix, trello_id_list, todays_date)
+
+      _ ->
+        {:exists, nil}
+    end
+  end
+
+  def get_daily_goal_card(
+        _,
+        trello_card_prefix,
+        trello_id_list,
+        todays_date
+      ) do
+    create_new_card(nil, trello_card_prefix, trello_id_list, todays_date)
   end
 
   @doc """
