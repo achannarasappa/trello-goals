@@ -226,7 +226,7 @@ defmodule DailyGoals.Main do
   @doc """
   Run daily goals
   """
-  def main() do
+  def main(_args) do
     config = Application.get_all_env(:app)
 
     list_id =

@@ -1,4 +1,4 @@
-defmodule TrelloDailyGoals.MixProject do
+defmodule DailyGoals.MixProject do
   use Mix.Project
 
   def project do
@@ -7,8 +7,13 @@ defmodule TrelloDailyGoals.MixProject do
       version: "0.1.0",
       elixir: "~> 1.6",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      deps: deps(),
+      escript: escript()
     ]
+  end
+
+  defp escript do
+    [main_module: DailyGoals.Main]
   end
 
   def application do
@@ -22,6 +27,7 @@ defmodule TrelloDailyGoals.MixProject do
       {:httpoison, "~> 1.0"},
       {:poison, "~> 3.1"},
       {:timex, "~> 3.1"},
+      {:tzdata, "~> 0.1.8"},
       {:dialyxir, "~> 0.4", only: [:dev]}
     ]
   end
