@@ -1,20 +1,31 @@
 defmodule DailyGoals.TrelloApi do
-  use HTTPoison.Base
+  import DailyGoals.Util
   import Poison
+  import Logger
 
-  def process_url(url) do
-    "https://api.trello.com/1" <> url
+  @base_url "https://api.trello.com/1"
+
+  def get(query_params, url) do
+    HTTPoison.get!(@base_url <> url <> "?" <> buildQueryString(query_params))
+    |> handle_response
   end
 
-  def process_response_body(body) do
-    Poison.decode!(body)
+  def post(payload, url) do
+    json_payload = Poison.encode!(payload)
+
+    HTTPoison.post!(@base_url <> url, json_payload, [{"Content-Type", "application/json"}])
+    |> handle_response
   end
 
-  def process_request_headers(headers) when is_map(headers) do
-    Enum.into(headers, %{"Content-Type" => "application/json"})
-  end
+  defp handle_response(response) do
+    response
+    |> case do
+      %HTTPoison.Response{body: body, status_code: 200} ->
+        Poison.decode!(body)
 
-  def process_request_body(body) do
-    Poison.encode!(body)
+      %HTTPoison.Response{body: body, status_code: _} ->
+        Logger.error(body)
+        raise body
+    end
   end
 end

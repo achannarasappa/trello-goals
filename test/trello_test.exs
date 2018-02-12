@@ -21,10 +21,6 @@ defmodule TrelloTest do
     end
   end
 
-  # setup do
-  #   :timer.sleep(5000)
-  # end
-
   @tag :io_read
   test "get_cards", config do
     expected = ["checklists", "closed", "due", "dueComplete", "id", "idList", "name"]
