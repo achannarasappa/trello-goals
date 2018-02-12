@@ -1,7 +1,10 @@
 defmodule DailyGoals.Trello do
   alias DailyGoals.TrelloApi, as: TrelloApi
   import DailyGoals.Util
+  import Poison
   import Logger
+
+  @base_url "https://api.trello.com/1"
 
   @doc """
   Get trello cards
@@ -17,12 +20,41 @@ defmodule DailyGoals.Trello do
 
     Logger.debug("Requesting cards for board #{board_id}")
 
-    TrelloApi.start()
-
-    TrelloApi.get!("/boards/#{board_id}/cards/open?" <> buildQueryString(query_string))
-    |> Map.get(:body)
+    HTTPoison.get!(
+      @base_url <> "/boards/" <> board_id <> "/cards/open?" <> buildQueryString(query_string)
+    )
+    |> case do
+      %HTTPoison.Response{body: body, status_code: 200} -> Poison.decode!(body)
+      %HTTPoison.Response{body: body, status_code: _} -> raise body
+    end
   end
 
+  @doc """
+  Get trello list matching name
+  """
+  def get_list(api_key, oath_token, board_id) do
+    query_string = [
+      filter: "open",
+      card_fields: "id,name",
+      fields: "id,closed,name",
+      key: api_key,
+      token: oath_token
+    ]
+
+    Logger.debug("Requesting lists for board #{board_id}")
+
+    HTTPoison.get!(
+      @base_url <> "/boards/" <> board_id <> "/lists?" <> buildQueryString(query_string)
+    )
+    |> case do
+      %HTTPoison.Response{body: body, status_code: 200} -> Poison.decode!(body)
+      %HTTPoison.Response{body: body, status_code: _} -> raise body
+    end
+  end
+
+  @doc """
+  Create trello checklist item
+  """
   defp create_check_item(api_key, oath_token, check_item, checklist_id) do
     response =
       %{"id" => id} =

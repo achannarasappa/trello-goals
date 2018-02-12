@@ -10,8 +10,8 @@ defmodule DailyGoals.TrelloApi do
     Poison.decode!(body)
   end
 
-  def process_request_headers(headers) do
-    Enum.into(headers, [{"Content-Type", "application/json"}])
+  def process_request_headers(headers) when is_map(headers) do
+    Enum.into(headers, %{"Content-Type" => "application/json"})
   end
 
   def process_request_body(body) do

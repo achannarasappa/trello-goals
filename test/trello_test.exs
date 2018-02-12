@@ -1,18 +1,18 @@
 defmodule TrelloTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: false
   alias DailyGoals.Trello, as: Trello
+  alias DailyGoals.TrelloApi, as: TrelloApi
 
-  @required_env [
-    :trello_api_key,
-    :trello_oauth_token,
-    :trello_board_id
-  ]
   @trello_list_id "5890a23bc9d14f6ca9c4c2cd"
 
   setup_all do
     config = Application.get_all_env(:app)
 
-    @required_env
+    [
+      :trello_api_key,
+      :trello_oauth_token,
+      :trello_board_id
+    ]
     |> MapSet.new()
     |> MapSet.subset?(config |> Keyword.keys() |> MapSet.new())
     |> case do
@@ -21,11 +21,28 @@ defmodule TrelloTest do
     end
   end
 
+  # setup do
+  #   :timer.sleep(5000)
+  # end
+
   @tag :io_read
   test "get_cards", config do
     expected = ["checklists", "closed", "due", "dueComplete", "id", "idList", "name"]
 
     assert Trello.get_cards(
+             config[:trello_api_key],
+             config[:trello_oauth_token],
+             config[:trello_board_id]
+           )
+           |> hd
+           |> Map.keys() == expected
+  end
+
+  @tag :io_read
+  test "get_list", config do
+    expected = ["closed", "id", "name"]
+
+    assert Trello.get_list(
              config[:trello_api_key],
              config[:trello_oauth_token],
              config[:trello_board_id]
