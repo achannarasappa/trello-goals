@@ -43,7 +43,7 @@ defmodule DailyGoals.Main do
   def get_card_date(card, trello_card_prefix) do
     date =
       card
-      |> Map.get(:name)
+      |> Map.get("name")
       |> String.replace_prefix(trello_card_prefix, "")
       |> Timex.parse("{Mfull} {D}, {YYYY}")
       |> case do
@@ -55,8 +55,8 @@ defmodule DailyGoals.Main do
       end
 
     %{
-      card: card,
-      date: date
+      "card" => card,
+      "date" => date
     }
   end
 
@@ -66,18 +66,18 @@ defmodule DailyGoals.Main do
   @spec is_card_for_today(card_parsed, Date.t()) :: boolean()
   def is_card_for_today(card_parsed, todays_date \\ Date.utc_today()) do
     card_parsed
-    |> Map.get(:date) == todays_date
+    |> Map.get("date") == todays_date
   end
 
   @doc """
   Compare two parsed cards and return the one with the most recent date
   """
   @spec compare_cards(card_parsed, card_parsed) :: card_parsed
-  def compare_cards(%{date: nil}, %{date: nil} = card_prev), do: card_prev
-  def compare_cards(%{date: nil}, %{date: _} = card_prev), do: card_prev
-  def compare_cards(%{date: _} = card_next, %{date: nil}), do: card_next
+  def compare_cards(%{"date" => nil}, %{"date" => nil} = card_prev), do: card_prev
+  def compare_cards(%{"date" => nil}, %{"date" => _} = card_prev), do: card_prev
+  def compare_cards(%{"date" => _} = card_next, %{"date" => nil}), do: card_next
 
-  def compare_cards(%{date: date_next} = card_next, %{date: date_prev} = card_prev) do
+  def compare_cards(%{"date" => date_next} = card_next, %{"date" => date_prev} = card_prev) do
     Timex.compare(date_prev, date_next)
     |> case do
       -1 -> card_next
@@ -93,20 +93,20 @@ defmodule DailyGoals.Main do
   @spec filter_checklist_items(card) :: card | nil
   def filter_checklist_items(card) do
     card
-    |> Map.get(:checklists, [])
+    |> Map.get("checklists", [])
     |> Enum.map(fn checklist ->
       checklist
-      |> Map.get(:checkItems, [])
-      |> Enum.filter(&(&1 |> Map.get(:state) == "incomplete"))
+      |> Map.get("checkItems", [])
+      |> Enum.filter(&(&1 |> Map.get("state") == "incomplete"))
       |> case do
         [] -> nil
-        checkItems -> checklist |> Map.put(:checkItems, checkItems)
+        checkItems -> checklist |> Map.put("checkItems", checkItems)
       end
     end)
     |> Enum.reject(&is_nil(&1))
     |> case do
       [] -> nil
-      checklists -> card |> Map.put(:checklists, checklists)
+      checklists -> card |> Map.put("checklists", checklists)
     end
   end
 
@@ -123,7 +123,7 @@ defmodule DailyGoals.Main do
 
         _ ->
           card
-          |> Map.get(:checklists)
+          |> Map.get("checklists")
           |> (&{:create, &1}).()
       end
 
@@ -132,12 +132,12 @@ defmodule DailyGoals.Main do
     {
       action,
       %{
-        name: "#{trello_card_prefix}#{date_string}",
-        idList: trello_id_list,
-        checklists: checklists,
-        closed: false,
-        due: Timex.format!(todays_date, "{ISOdate}"),
-        dueComplete: false
+        "name" => "#{trello_card_prefix}#{date_string}",
+        "idList" => trello_id_list,
+        "checklists" => checklists,
+        "closed" => false,
+        "due" => Timex.format!(todays_date, "{ISOdate}"),
+        "dueComplete" => false
       }
     }
   end
@@ -179,7 +179,7 @@ defmodule DailyGoals.Main do
     |> case do
       [card] ->
         card
-        |> Map.get(:card)
+        |> Map.get("card")
         |> filter_checklist_items
         |> create_new_card(trello_card_prefix, trello_id_list, todays_date)
 
@@ -206,7 +206,7 @@ defmodule DailyGoals.Main do
     |> Enum.map(fn list ->
       distance =
         list
-        |> Map.get(:name)
+        |> Map.get("name")
         |> String.jaro_distance(trello_list_name)
 
       {distance, list}
@@ -219,7 +219,7 @@ defmodule DailyGoals.Main do
       end
     end)
     |> elem(1)
-    |> Map.get(:id)
+    |> Map.get("id")
   end
 
   @doc """

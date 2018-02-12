@@ -3,21 +3,21 @@ defmodule MainTest do
   alias DailyGoals.Main, as: Main
 
   @card_other %{
-    name: "other task"
+    "name" => "other task"
   }
   @card_parsed_other %{
-    card: @card_other,
-    date: nil
+    "card" => @card_other,
+    "date" => nil
   }
   @card_old_daily_goal %{
-    name: "Daily Goals - January 29, 2018"
+    "name" => "Daily Goals - January 29, 2018"
   }
   @card_current_daily_goal %{
-    name: "Daily Goals - January 30, 2018"
+    "name" => "Daily Goals - January 30, 2018"
   }
   @card_parsed_current_daily_goal %{
-    card: @card_current_daily_goal,
-    date: ~D[2018-01-30]
+    "card" => @card_current_daily_goal,
+    "date" => ~D[2018-01-30]
   }
   @trello_card_prefix "Daily Goals - "
 
@@ -46,29 +46,29 @@ defmodule MainTest do
 
   test "filter_checklist_items mixed" do
     assert Main.filter_checklist_items(%{
-             checklists: [
+             "checklists" => [
                %{
-                 name: "mixed",
-                 checkItems: [
+                 "name" => "mixed",
+                 "checkItems" => [
                    %{
-                     state: "complete"
+                     "state" => "complete"
                    },
                    %{
-                     state: "incomplete"
+                     "state" => "incomplete"
                    },
                    %{
-                     state: "other"
+                     "state" => "other"
                    }
                  ]
                }
              ]
            }) == %{
-             checklists: [
+             "checklists" => [
                %{
-                 name: "mixed",
-                 checkItems: [
+                 "name" => "mixed",
+                 "checkItems" => [
                    %{
-                     state: "incomplete"
+                     "state" => "incomplete"
                    }
                  ]
                }
@@ -78,23 +78,23 @@ defmodule MainTest do
 
   test "filter_checklist_items incomplete" do
     assert Main.filter_checklist_items(%{
-             checklists: [
+             "checklists" => [
                %{
-                 name: "incomplete",
-                 checkItems: [
+                 "name" => "incomplete",
+                 "checkItems" => [
                    %{
-                     state: "incomplete"
+                     "state" => "incomplete"
                    }
                  ]
                }
              ]
            }) == %{
-             checklists: [
+             "checklists" => [
                %{
-                 name: "incomplete",
-                 checkItems: [
+                 "name" => "incomplete",
+                 "checkItems" => [
                    %{
-                     state: "incomplete"
+                     "state" => "incomplete"
                    }
                  ]
                }
@@ -104,12 +104,12 @@ defmodule MainTest do
 
   test "filter_checklist_items complete" do
     assert Main.filter_checklist_items(%{
-             checklists: [
+             "checklists" => [
                %{
-                 name: "complete",
-                 checkItems: [
+                 "name" => "complete",
+                 "checkItems" => [
                    %{
-                     state: "complete"
+                     "state" => "complete"
                    }
                  ]
                }
@@ -119,10 +119,10 @@ defmodule MainTest do
 
   test "filter_checklist_items empty" do
     assert Main.filter_checklist_items(%{
-             checklists: [
+             "checklists" => [
                %{
-                 name: "empty",
-                 checkItems: []
+                 "name" => "empty",
+                 "checkItems" => []
                }
              ]
            }) == nil
@@ -131,71 +131,71 @@ defmodule MainTest do
   test "compare_cards" do
     assert Main.compare_cards(
              %{
-               card: "next",
-               date: ~D[2018-01-29]
+               "card" => "next",
+               "date" => ~D[2018-01-29]
              },
              %{
-               card: "prev",
-               date: ~D[2018-01-30]
+               "card" => "prev",
+               "date" => ~D[2018-01-30]
              }
            ) ==
              %{
-               card: "prev",
-               date: ~D[2018-01-30]
+               "card" => "prev",
+               "date" => ~D[2018-01-30]
              }
 
     assert Main.compare_cards(
              %{
-               card: "next",
-               date: ~D[2018-01-30]
+               "card" => "next",
+               "date" => ~D[2018-01-30]
              },
              %{
-               card: "prev",
-               date: ~D[2018-01-29]
+               "card" => "prev",
+               "date" => ~D[2018-01-29]
              }
            ) ==
              %{
-               card: "next",
-               date: ~D[2018-01-30]
+               "card" => "next",
+               "date" => ~D[2018-01-30]
              }
 
     assert Main.compare_cards(
              %{
-               card: "next",
-               date: ~D[2018-01-30]
+               "card" => "next",
+               "date" => ~D[2018-01-30]
              },
              %{
-               card: "prev",
-               date: ~D[2018-01-30]
+               "card" => "prev",
+               "date" => ~D[2018-01-30]
              }
            ) ==
              %{
-               card: "prev",
-               date: ~D[2018-01-30]
+               "card" => "prev",
+               "date" => ~D[2018-01-30]
              }
 
     assert Main.compare_cards(
              %{
-               card: "next",
-               date: nil
+               "card" => "next",
+               "date" => nil
              },
              %{
-               card: "prev",
-               date: ~D[2018-01-30]
+               "card" => "prev",
+               "date" => ~D[2018-01-30]
              }
            ) ==
              %{
-               card: "prev",
-               date: ~D[2018-01-30]
+               "card" => "prev",
+               "date" => ~D[2018-01-30]
              }
   end
 
   test "create_new_card card" do
     assert Main.create_new_card(
              %{
-               checklists: [
+               "checklists" => [
                  %{
-                   name: "test"
+                   "name" => "test"
                  }
                ]
              },
@@ -205,16 +205,16 @@ defmodule MainTest do
            ) == {
              :create,
              %{
-               name: "Daily Goals - January 31, 2018",
-               idList: "12345",
-               checklists: [
+               "name" => "Daily Goals - January 31, 2018",
+               "idList" => "12345",
+               "checklists" => [
                  %{
-                   name: "test"
+                   "name" => "test"
                  }
                ],
-               closed: false,
-               due: "2018-01-31",
-               dueComplete: false
+               "closed" => false,
+               "due" => "2018-01-31",
+               "dueComplete" => false
              }
            }
   end
@@ -223,32 +223,32 @@ defmodule MainTest do
     assert Main.create_new_card(nil, @trello_card_prefix, "12345", ~D[2018-01-31]) ==
              {:empty,
               %{
-                name: "Daily Goals - January 31, 2018",
-                idList: "12345",
-                checklists: [],
-                closed: false,
-                due: "2018-01-31",
-                dueComplete: false
+                "name" => "Daily Goals - January 31, 2018",
+                "idList" => "12345",
+                "checklists" => [],
+                "closed" => false,
+                "due" => "2018-01-31",
+                "dueComplete" => false
               }}
   end
 
   test "get_daily_goal_card" do
     input_incomplete = [
       %{
-        name: "Daily Goals - January 30, 2018",
-        checklists: [
+        "name" => "Daily Goals - January 30, 2018",
+        "checklists" => [
           %{
-            name: "my checklist",
-            checkItems: [
+            "name" => "my checklist",
+            "checkItems" => [
               %{
-                state: "incomplete"
+                "state" => "incomplete"
               }
             ]
           }
         ]
       },
       %{
-        name: "Daily Goals - January 29, 2018"
+        "name" => "Daily Goals - January 29, 2018"
       }
     ]
 
@@ -257,11 +257,11 @@ defmodule MainTest do
       |> put_in(
         [
           Access.at(0),
-          Access.key!(:checklists),
+          Access.key!("checklists"),
           Access.all(),
-          Access.key!(:checkItems),
+          Access.key!("checkItems"),
           Access.all(),
-          Access.key!(:state)
+          Access.key!("state")
         ],
         "complete"
       )
@@ -271,32 +271,32 @@ defmodule MainTest do
     expected_empty =
       {:empty,
        %{
-         checklists: [],
-         closed: false,
-         due: "2018-01-31",
-         dueComplete: false,
-         idList: "12345",
-         name: "Daily Goals - January 31, 2018"
+         "checklists" => [],
+         "closed" => false,
+         "due" => "2018-01-31",
+         "dueComplete" => false,
+         "idList" => "12345",
+         "name" => "Daily Goals - January 31, 2018"
        }}
 
     expected_create =
       {:create,
        %{
-         checklists: [
+         "checklists" => [
            %{
-             name: "my checklist",
-             checkItems: [
+             "name" => "my checklist",
+             "checkItems" => [
                %{
-                 state: "incomplete"
+                 "state" => "incomplete"
                }
              ]
            }
          ],
-         closed: false,
-         due: "2018-01-31",
-         dueComplete: false,
-         idList: "12345",
-         name: "Daily Goals - January 31, 2018"
+         "closed" => false,
+         "due" => "2018-01-31",
+         "dueComplete" => false,
+         "idList" => "12345",
+         "name" => "Daily Goals - January 31, 2018"
        }}
 
     assert Main.get_daily_goal_card(
@@ -329,25 +329,21 @@ defmodule MainTest do
   end
 
   test "get_list_id" do
-  
     input_lists = [
       %{
-        id: "abc",
-        name: "Active List",
+        "id" => "abc",
+        "name" => "Active List"
       },
       %{
-        id: "def",
-        name: "Other List",
+        "id" => "def",
+        "name" => "Other List"
       },
       %{
-        id: "hij",
-        name: "Inactive List",
+        "id" => "hij",
+        "name" => "Inactive List"
       }
     ]
 
     assert Main.get_list_id(input_lists, "Active") == "abc"
-
-  
   end
-  
 end
