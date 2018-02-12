@@ -33,6 +33,15 @@ defmodule DailyGoals.Trello do
       token: oath_token
     ]
     |> TrelloApi.get("/boards/#{board_id}/lists")
+    |> case do
+      lists when length(lists) > 0 ->
+        lists
+
+      _ ->
+        msg = "No lists on board #{board_id}!"
+        Logger.error(msg)
+        raise msg
+    end
   end
 
   @doc """

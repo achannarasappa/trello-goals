@@ -26,7 +26,15 @@ defmodule DailyGoals.Main do
           state: String.t()
         }
 
-  @type card_parsed :: %{card: card, date: Date.t() | nil}
+  @type card_parsed :: %{
+          card: card,
+          date: Date.t() | nil
+        }
+
+  @type card_list :: %{
+          id: String.t(),
+          name: String.t()
+        }
 
   @doc """
   Get card date
@@ -187,6 +195,31 @@ defmodule DailyGoals.Main do
         todays_date
       ) do
     create_new_card(nil, trello_card_prefix, trello_id_list, todays_date)
+  end
+
+  @doc """
+  Get list that matches the target list name
+  """
+  @spec get_list_id([card_list], String.t()) :: String.t()
+  def get_list_id(lists, trello_list_name) when length(lists) > 0 do
+    lists
+    |> Enum.map(fn list ->
+      distance =
+        list
+        |> Map.get(:name)
+        |> String.jaro_distance(trello_list_name)
+
+      {distance, list}
+    end)
+    |> Enum.reduce(fn {next_distance, _} = next, {prev_distance, _} = prev ->
+      if next_distance > prev_distance do
+        next
+      else
+        prev
+      end
+    end)
+    |> elem(1)
+    |> Map.get(:id)
   end
 
   @doc """

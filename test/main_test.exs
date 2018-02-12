@@ -327,4 +327,27 @@ defmodule MainTest do
              ~D[2018-01-31]
            ) == expected_create
   end
+
+  test "get_list_id" do
+  
+    input_lists = [
+      %{
+        id: "abc",
+        name: "Active List",
+      },
+      %{
+        id: "def",
+        name: "Other List",
+      },
+      %{
+        id: "hij",
+        name: "Inactive List",
+      }
+    ]
+
+    assert Main.get_list_id(input_lists, "Active") == "abc"
+
+  
+  end
+  
 end
