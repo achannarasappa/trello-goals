@@ -3,10 +3,19 @@
 Repeat a daily goal card once per day rolling over any incomplete checklist items to the next day
 
 ## Installation
-TODO
+```sh
+mix escript.build
+```
 
 ## Usage
-TODO
+```sh
+export TRELLO_API_KEY=<your api key>
+export TRELLO_OAUTH_TOKEN=<your oauth token>
+export TRELLO_BOARD_ID=<your board id>
+export TRELLO_LIST_NAME="In Progress"
+export TRELLO_CARD_TITLE_PREFIX="Daily Goals - "
+./app
+```
 
 ## Motivation
 - Like daily check-in and daily day-level goal completion aspects of [Status Hero](https://statushero.com/) but this tool is geared towards teams and lacks task-level tracking
