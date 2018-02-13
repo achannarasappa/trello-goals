@@ -1,21 +1,15 @@
-# TrelloDailyGoals
+# Trello Daily Goals
 
-**TODO: Add description**
+Repeat a daily goal card once per day rolling over any incomplete checklist items to the next day
 
 ## Installation
+TODO
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `trello_daily_goals` to your list of dependencies in `mix.exs`:
+## Usage
+TODO
 
-```elixir
-def deps do
-  [
-    {:trello_daily_goals, "~> 0.1.0"}
-  ]
-end
-```
-
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/trello_daily_goals](https://hexdocs.pm/trello_daily_goals).
+## Motivation
+- Like daily check-in and daily day-level goal completion aspects of [Status Hero](https://statushero.com/) but this tool is geared towards teams and lacks task-level tracking
+- Like daily task-level goal completion of and historical goal completion views of HabitBull but this tool does not support one-off daily tasks
+- Trello offers flexible task-level tracking via checklists and day-level tracking via cards. Trello has a Card Repeater power-up but lacks ability to roll over checklist items, set a title based ondate, or a due date based on date.
 
