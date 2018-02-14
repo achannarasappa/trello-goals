@@ -13,11 +13,15 @@ defmodule Goals.MixProject do
   end
 
   defp escript do
-    [main_module: Goals.Cli, name: "goals"]
+    [
+      main_module: Goals.Cli,
+      name: "goals"
+    ]
   end
 
   def application do
     [
+      mod: {Goals, []},
       extra_applications: [:logger]
     ]
   end
@@ -28,6 +32,7 @@ defmodule Goals.MixProject do
       {:poison, "~> 3.1"},
       {:timex, "~> 3.1"},
       {:tzdata, "~> 0.1.8"},
+      {:quantum, ">= 2.2.2"},
       {:dialyxir, "~> 0.4", only: [:dev]}
     ]
   end

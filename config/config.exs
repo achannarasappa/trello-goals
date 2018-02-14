@@ -12,3 +12,8 @@ config :app,
   trello_board_id: System.get_env("TRELLO_BOARD_ID"),
   trello_list_name: System.get_env("TRELLO_LIST_NAME"),
   trello_card_prefix: System.get_env("TRELLO_CARD_TITLE_PREFIX")
+
+config :app, Goals.Scheduler,
+  jobs: [
+    {"@daily", fn -> Goals.Repeater.run() end}
+  ]

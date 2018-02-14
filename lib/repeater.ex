@@ -227,6 +227,8 @@ defmodule Goals.Repeater do
   Run daily goals
   """
   def run(config \\ Application.get_all_env(:app)) do
+    Logger.info("Starting card repeater")
+
     list_id =
       Trello.get_list(
         config[:trello_api_key],
@@ -243,16 +245,20 @@ defmodule Goals.Repeater do
     |> get_daily_goal_card(config[:trello_card_prefix], list_id)
     |> case do
       {:exists, _} ->
-        Logger.info("Card already exists for today!")
-        nil
+        Logger.info("Card already exists for today")
+        {:ok}
 
       {_, card} ->
+        Logger.info("Creating card for today")
+
         Trello.create_card(
           config[:trello_api_key],
           config[:trello_oauth_token],
           card,
           list_id
         )
+
+        {:ok}
     end
   end
 end
