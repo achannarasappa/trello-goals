@@ -213,7 +213,7 @@ defmodule RepeaterTest do
                  }
                ],
                "closed" => false,
-               "due" => "2018-01-31",
+               "due" => "2018-01-31T22:00:00Z",
                "dueComplete" => false
              }
            }
@@ -227,7 +227,7 @@ defmodule RepeaterTest do
                 "idList" => "12345",
                 "checklists" => [],
                 "closed" => false,
-                "due" => "2018-01-31",
+                "due" => "2018-01-31T22:00:00Z",
                 "dueComplete" => false
               }}
   end
@@ -273,7 +273,7 @@ defmodule RepeaterTest do
        %{
          "checklists" => [],
          "closed" => false,
-         "due" => "2018-01-31",
+         "due" => "2018-01-31T22:00:00Z",
          "dueComplete" => false,
          "idList" => "12345",
          "name" => "Daily Goals - January 31, 2018"
@@ -293,7 +293,7 @@ defmodule RepeaterTest do
            }
          ],
          "closed" => false,
-         "due" => "2018-01-31",
+         "due" => "2018-01-31T22:00:00Z",
          "dueComplete" => false,
          "idList" => "12345",
          "name" => "Daily Goals - January 31, 2018"

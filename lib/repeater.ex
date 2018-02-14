@@ -137,7 +137,11 @@ defmodule Goals.Repeater do
         "idList" => trello_id_list,
         "checklists" => checklists,
         "closed" => false,
-        "due" => Timex.format!(todays_date, "{ISOdate}"),
+        "due" =>
+          todays_date
+          |> Timex.to_datetime()
+          |> Timex.set(hour: 22)
+          |> Timex.format!("{ISO:Extended:Z}"),
         "dueComplete" => false
       }
     }
