@@ -1,7 +1,7 @@
 defmodule TrelloTest do
   use ExUnit.Case, async: false
-  alias DailyGoals.Trello, as: Trello
-  alias DailyGoals.TrelloApi, as: TrelloApi
+  alias Goals.Trello, as: Trello
+  alias Goals.TrelloApi, as: TrelloApi
 
   @trello_list_id "5890a23bc9d14f6ca9c4c2cd"
 

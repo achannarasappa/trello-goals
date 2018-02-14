@@ -1,6 +1,6 @@
 defmodule MainTest do
   use ExUnit.Case
-  alias DailyGoals.Main, as: Main
+  alias Goals.Main, as: Main
 
   @card_other %{
     "name" => "other task"

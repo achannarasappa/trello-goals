@@ -1,9 +1,9 @@
-defmodule DailyGoals.Main do
-  alias DailyGoals.Trello, as: Trello
+defmodule Goals.Main do
+  alias Goals.Trello, as: Trello
   import Logger
 
   @moduledoc """
-  Main module for DailyGoals
+  Main module for Goals
   """
 
   @type card :: %{
@@ -226,7 +226,7 @@ defmodule DailyGoals.Main do
   @doc """
   Run daily goals
   """
-  def main(_args) do
+  def main() do
     config = Application.get_all_env(:app)
 
     list_id =

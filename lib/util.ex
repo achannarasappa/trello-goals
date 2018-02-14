@@ -1,4 +1,4 @@
-defmodule DailyGoals.Util do
+defmodule Goals.Util do
   def buildQueryString(map) do
     map
     |> Enum.map(fn {key, value} -> "#{key}=#{value}" end)

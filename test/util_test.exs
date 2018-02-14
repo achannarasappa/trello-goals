@@ -1,6 +1,6 @@
-defmodule DailyGoalsUtilTest do
+defmodule GoalsUtilTest do
   use ExUnit.Case
-  import DailyGoals.Util
+  import Goals.Util
 
   test "build query string" do
     input = [

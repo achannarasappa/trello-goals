@@ -1,4 +1,4 @@
-defmodule DailyGoals.MixProject do
+defmodule Goals.MixProject do
   use Mix.Project
 
   def project do
@@ -13,7 +13,7 @@ defmodule DailyGoals.MixProject do
   end
 
   defp escript do
-    [main_module: DailyGoals.Main]
+    [main_module: Goals.Main]
   end
 
   def application do

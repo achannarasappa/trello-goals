@@ -1,5 +1,5 @@
-defmodule DailyGoals.TrelloApi do
-  import DailyGoals.Util
+defmodule Goals.TrelloApi do
+  import Goals.Util
   import Poison
   import Logger
 

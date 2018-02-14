@@ -2,7 +2,7 @@ use Mix.Config
 import String
 
 config :logger, :console,
-  format: {DailyGoals.Logger, :format},
+  format: {Goals.Logger, :format},
   level: :debug,
   metadata: :all
 

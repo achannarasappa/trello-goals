@@ -1,5 +1,5 @@
-defmodule DailyGoals.Trello do
-  alias DailyGoals.TrelloApi, as: TrelloApi
+defmodule Goals.Trello do
+  alias Goals.TrelloApi, as: TrelloApi
   import Poison
   import Logger
 
