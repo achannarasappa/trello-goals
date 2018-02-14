@@ -1,6 +1,6 @@
-defmodule MainTest do
+defmodule RepeaterTest do
   use ExUnit.Case
-  alias Goals.Main, as: Main
+  alias Goals.Repeater, as: Repeater
 
   @card_other %{
     "name" => "other task"
@@ -22,30 +22,30 @@ defmodule MainTest do
   @trello_card_prefix "Daily Goals - "
 
   test "get_card_date" do
-    assert Main.get_card_date(@card_current_daily_goal, @trello_card_prefix) ==
+    assert Repeater.get_card_date(@card_current_daily_goal, @trello_card_prefix) ==
              @card_parsed_current_daily_goal
 
-    assert Main.get_card_date(@card_other, @trello_card_prefix) == @card_parsed_other
+    assert Repeater.get_card_date(@card_other, @trello_card_prefix) == @card_parsed_other
   end
 
   test "is_card_for_today true" do
-    assert Main.is_card_for_today(
+    assert Repeater.is_card_for_today(
              @card_parsed_current_daily_goal,
              Timex.to_date({2018, 1, 30})
            ) == true
   end
 
   test "is_card_for_today false" do
-    assert Main.is_card_for_today(
+    assert Repeater.is_card_for_today(
              @card_parsed_other,
              Timex.to_date({2018, 1, 30})
            ) == false
 
-    assert Main.is_card_for_today(@card_old_daily_goal, "invalid date") == false
+    assert Repeater.is_card_for_today(@card_old_daily_goal, "invalid date") == false
   end
 
   test "filter_checklist_items mixed" do
-    assert Main.filter_checklist_items(%{
+    assert Repeater.filter_checklist_items(%{
              "checklists" => [
                %{
                  "name" => "mixed",
@@ -77,7 +77,7 @@ defmodule MainTest do
   end
 
   test "filter_checklist_items incomplete" do
-    assert Main.filter_checklist_items(%{
+    assert Repeater.filter_checklist_items(%{
              "checklists" => [
                %{
                  "name" => "incomplete",
@@ -103,7 +103,7 @@ defmodule MainTest do
   end
 
   test "filter_checklist_items complete" do
-    assert Main.filter_checklist_items(%{
+    assert Repeater.filter_checklist_items(%{
              "checklists" => [
                %{
                  "name" => "complete",
@@ -118,7 +118,7 @@ defmodule MainTest do
   end
 
   test "filter_checklist_items empty" do
-    assert Main.filter_checklist_items(%{
+    assert Repeater.filter_checklist_items(%{
              "checklists" => [
                %{
                  "name" => "empty",
@@ -129,7 +129,7 @@ defmodule MainTest do
   end
 
   test "compare_cards" do
-    assert Main.compare_cards(
+    assert Repeater.compare_cards(
              %{
                "card" => "next",
                "date" => ~D[2018-01-29]
@@ -144,7 +144,7 @@ defmodule MainTest do
                "date" => ~D[2018-01-30]
              }
 
-    assert Main.compare_cards(
+    assert Repeater.compare_cards(
              %{
                "card" => "next",
                "date" => ~D[2018-01-30]
@@ -159,7 +159,7 @@ defmodule MainTest do
                "date" => ~D[2018-01-30]
              }
 
-    assert Main.compare_cards(
+    assert Repeater.compare_cards(
              %{
                "card" => "next",
                "date" => ~D[2018-01-30]
@@ -174,7 +174,7 @@ defmodule MainTest do
                "date" => ~D[2018-01-30]
              }
 
-    assert Main.compare_cards(
+    assert Repeater.compare_cards(
              %{
                "card" => "next",
                "date" => nil
@@ -191,7 +191,7 @@ defmodule MainTest do
   end
 
   test "create_new_card card" do
-    assert Main.create_new_card(
+    assert Repeater.create_new_card(
              %{
                "checklists" => [
                  %{
@@ -220,7 +220,7 @@ defmodule MainTest do
   end
 
   test "create_new_card nil" do
-    assert Main.create_new_card(nil, @trello_card_prefix, "12345", ~D[2018-01-31]) ==
+    assert Repeater.create_new_card(nil, @trello_card_prefix, "12345", ~D[2018-01-31]) ==
              {:empty,
               %{
                 "name" => "Daily Goals - January 31, 2018",
@@ -299,28 +299,28 @@ defmodule MainTest do
          "name" => "Daily Goals - January 31, 2018"
        }}
 
-    assert Main.get_daily_goal_card(
+    assert Repeater.get_daily_goal_card(
              input_incomplete,
              @trello_card_prefix,
              "12345",
              ~D[2018-01-30]
            ) == expected_exists
 
-    assert Main.get_daily_goal_card(
+    assert Repeater.get_daily_goal_card(
              [],
              @trello_card_prefix,
              "12345",
              ~D[2018-01-31]
            ) == expected_empty
 
-    assert Main.get_daily_goal_card(
+    assert Repeater.get_daily_goal_card(
              input_complete,
              @trello_card_prefix,
              "12345",
              ~D[2018-01-31]
            ) == expected_empty
 
-    assert Main.get_daily_goal_card(
+    assert Repeater.get_daily_goal_card(
              input_incomplete,
              @trello_card_prefix,
              "12345",
@@ -344,6 +344,6 @@ defmodule MainTest do
       }
     ]
 
-    assert Main.get_list_id(input_lists, "Active") == "abc"
+    assert Repeater.get_list_id(input_lists, "Active") == "abc"
   end
 end

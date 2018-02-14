@@ -1,4 +1,4 @@
-defmodule Goals.Main do
+defmodule Goals.Repeater do
   alias Goals.Trello, as: Trello
   import Logger
 
