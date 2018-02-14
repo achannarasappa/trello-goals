@@ -226,9 +226,7 @@ defmodule Goals.Repeater do
   @doc """
   Run daily goals
   """
-  def main() do
-    config = Application.get_all_env(:app)
-
+  def run(config \\ Application.get_all_env(:app)) do
     list_id =
       Trello.get_list(
         config[:trello_api_key],

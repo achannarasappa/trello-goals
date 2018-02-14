@@ -13,7 +13,7 @@ defmodule Goals.MixProject do
   end
 
   defp escript do
-    [main_module: Goals.Repeater]
+    [main_module: Goals.Cli, name: "goals"]
   end
 
   def application do
