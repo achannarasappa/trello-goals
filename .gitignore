@@ -1,8 +1,12 @@
 *
 !.gitignore
 !Dockerfile
+!README.md
+!.formatter.exs
 !mix.lock
-!*.exs
-!**/*.exs
-!*.ex
-!**/*.ex
+!mix.exs
+!test
+!test/**/*.exs
+!lib
+!lib/**/*.ex
+!config/config.exs
