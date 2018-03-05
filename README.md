@@ -4,11 +4,11 @@ Repeat a daily goal card once per day rolling over any incomplete checklist item
 
 ## Configuration
 Configure through environment
-* TRELLO_API_KEY - API which can be found [here](https://trello.com/app-key)
-* TRELLO_OAUTH_TOKEN - Token that can be generate by following the Token link [here](https://trello.com/app-key)
-* TRELLO_BOARD_ID - Board id which can be found in the url when viewing a board e.g. _be0BbWVQ_
-* TRELLO_LIST_NAME - List name to create new cards on e.g. _Daily Goals_
-* TRELLO_CARD_TITLE_PREFIX - Title prefix for daily goal cards e.g. _Daily Goals -_. This is how the service locates past cards to roll over.
+* `TRELLO_API_KEY` - API which can be found [here](https://trello.com/app-key)
+* `TRELLO_OAUTH_TOKEN` - Token that can be generate by following the Token link [here](https://trello.com/app-key)
+* `TRELLO_BOARD_ID` - Board id which can be found in the url when viewing a board e.g. _be0BbWVQ_
+* `TRELLO_LIST_NAME` - List name to create new cards on e.g. _Daily Goals_
+* `TRELLO_CARD_TITLE_PREFIX` - Title prefix for daily goal cards e.g. _Daily Goals -_. This is how the service locates past cards to roll over.
 
 ## Usage
 ### Docker
