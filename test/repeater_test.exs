@@ -201,6 +201,7 @@ defmodule RepeaterTest do
              },
              @trello_card_prefix,
              "12345",
+             "UTC",
              ~D[2018-01-31]
            ) == {
              :create,
@@ -220,7 +221,13 @@ defmodule RepeaterTest do
   end
 
   test "create_new_card nil" do
-    assert Repeater.create_new_card(nil, @trello_card_prefix, "12345", ~D[2018-01-31]) ==
+    assert Repeater.create_new_card(
+             nil,
+             @trello_card_prefix,
+             "12345",
+             "UTC",
+             ~D[2018-01-31]
+           ) ==
              {:empty,
               %{
                 "name" => "Daily Goals - January 31, 2018",
@@ -303,6 +310,7 @@ defmodule RepeaterTest do
              input_incomplete,
              @trello_card_prefix,
              "12345",
+             "UTC",
              ~D[2018-01-30]
            ) == expected_exists
 
@@ -310,6 +318,7 @@ defmodule RepeaterTest do
              [],
              @trello_card_prefix,
              "12345",
+             "UTC",
              ~D[2018-01-31]
            ) == expected_empty
 
@@ -317,6 +326,7 @@ defmodule RepeaterTest do
              input_complete,
              @trello_card_prefix,
              "12345",
+             "UTC",
              ~D[2018-01-31]
            ) == expected_empty
 
@@ -324,6 +334,7 @@ defmodule RepeaterTest do
              input_incomplete,
              @trello_card_prefix,
              "12345",
+             "UTC",
              ~D[2018-01-31]
            ) == expected_create
   end

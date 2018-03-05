@@ -114,8 +114,15 @@ defmodule Goals.Repeater do
   @doc """
   Create new daily goals card based on previous checklists
   """
-  @spec create_new_card(card | nil, String.t(), String.t(), Date.t()) :: {atom(), card}
-  def create_new_card(card, trello_card_prefix, trello_id_list, todays_date \\ Date.utc_today()) do
+  @spec create_new_card(card | nil, String.t(), String.t(), String.t(), Date.t()) ::
+          {atom(), card}
+  def create_new_card(
+        card,
+        trello_card_prefix,
+        trello_id_list,
+        timezone \\ "America/New_York",
+        todays_date \\ Date.utc_today()
+      ) do
     {action, checklists} =
       card
       |> case do
@@ -129,6 +136,7 @@ defmodule Goals.Repeater do
       end
 
     date_string = Timex.format!(todays_date, "{Mfull} {D}, {YYYY}")
+    timex_timezone = Timex.Timezone.get(timezone, Timex.now())
 
     {
       action,
@@ -140,6 +148,7 @@ defmodule Goals.Repeater do
         "due" =>
           todays_date
           |> Timex.to_datetime()
+          |> Timex.Timezone.convert(timex_timezone)
           |> Timex.set(hour: 22)
           |> Timex.format!("{ISO:Extended:Z}"),
         "dueComplete" => false
@@ -155,6 +164,7 @@ defmodule Goals.Repeater do
         cards,
         trello_card_prefix,
         trello_id_list,
+        timezone \\ "America/New_York",
         todays_date \\ Date.utc_today()
       )
 
@@ -162,6 +172,7 @@ defmodule Goals.Repeater do
         cards,
         trello_card_prefix,
         trello_id_list,
+        timezone,
         todays_date
       )
       when length(cards) > 1 do
@@ -169,13 +180,14 @@ defmodule Goals.Repeater do
     |> Enum.map(&get_card_date(&1, trello_card_prefix))
     |> Enum.reduce(&compare_cards(&1, &2))
     |> List.wrap()
-    |> get_daily_goal_card(trello_card_prefix, trello_id_list, todays_date)
+    |> get_daily_goal_card(trello_card_prefix, trello_id_list, timezone, todays_date)
   end
 
   def get_daily_goal_card(
         cards,
         trello_card_prefix,
         trello_id_list,
+        timezone,
         todays_date
       )
       when length(cards) == 1 do
@@ -186,7 +198,7 @@ defmodule Goals.Repeater do
         card
         |> Map.get("card")
         |> filter_checklist_items
-        |> create_new_card(trello_card_prefix, trello_id_list, todays_date)
+        |> create_new_card(trello_card_prefix, trello_id_list, timezone, todays_date)
 
       _ ->
         {:exists, nil}
@@ -197,9 +209,10 @@ defmodule Goals.Repeater do
         _,
         trello_card_prefix,
         trello_id_list,
+        timezone,
         todays_date
       ) do
-    create_new_card(nil, trello_card_prefix, trello_id_list, todays_date)
+    create_new_card(nil, trello_card_prefix, trello_id_list, timezone, todays_date)
   end
 
   @doc """
@@ -246,7 +259,7 @@ defmodule Goals.Repeater do
       config[:trello_oauth_token],
       config[:trello_board_id]
     )
-    |> get_daily_goal_card(config[:trello_card_prefix], list_id)
+    |> get_daily_goal_card(config[:trello_card_prefix], list_id, config[:trello_timezone])
     |> case do
       {:exists, _} ->
         Logger.info("Card already exists for today")

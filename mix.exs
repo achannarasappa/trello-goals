@@ -30,9 +30,9 @@ defmodule Goals.MixProject do
     [
       {:httpoison, "~> 1.0"},
       {:poison, "~> 3.1"},
-      {:timex, "~> 3.1"},
+      {:timex, "~> 3.2"},
       {:tzdata, "~> 0.1.8"},
-      {:quantum, ">= 2.2.2"},
+      {:quantum, ">= 2.2.5"},
       {:dialyxir, "~> 0.4", only: [:dev]}
     ]
   end
