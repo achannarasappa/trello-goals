@@ -19,6 +19,12 @@ docker run -d --env-file=trello-goals.env achannarasappa/trello-goals
 ```sh
 mix run --no-halt
 ```
+### Executable
+```sh
+mix escript.build
+./goals
+```
+Note: Must have [Erlang installed](http://www.erlang.org/downloads) to run executable 
 
 ## Motivation
 - Like daily check-in and daily day-level goal completion aspects of [Status Hero](https://statushero.com/) but this tool is geared towards teams and lacks task-level tracking
