@@ -15,5 +15,5 @@ config :app,
 
 config :app, Goals.Scheduler,
   jobs: [
-    {"@daily", fn -> Goals.Repeater.run() end}
+    {"@daily", {Goals.Repeater, :run, []}}
   ]
