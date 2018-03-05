@@ -1,6 +1,6 @@
 defmodule Goals.Repeater do
   alias Goals.Trello, as: Trello
-  import Logger
+  require Logger
 
   @moduledoc """
   Main module for Goals

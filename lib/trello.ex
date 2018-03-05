@@ -1,7 +1,6 @@
 defmodule Goals.Trello do
   alias Goals.TrelloApi, as: TrelloApi
-  import Poison
-  import Logger
+  require Logger
 
   @doc """
   Get trello cards

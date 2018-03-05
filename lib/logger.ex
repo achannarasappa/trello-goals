@@ -1,6 +1,4 @@
 defmodule Goals.Logger do
-  import Poison
-
   def format(level, message, _, metadata) do
     "\n" <>
       Poison.encode!(%{

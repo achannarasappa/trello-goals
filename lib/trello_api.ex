@@ -1,7 +1,6 @@
 defmodule Goals.TrelloApi do
   import Goals.Util
-  import Poison
-  import Logger
+  require Logger
 
   @base_url "https://api.trello.com/1"
 
